@@ -22,16 +22,27 @@
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(100, 100, 100, 100);
     button.backgroundColor = [UIColor redColor];
+    __weak typeof(self) weakself = self;
     [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-        UIViewController *viewController = [[CTMediator sharedInstance] B_viewControllerWithContentText:@"Hello,word !!!"];
-        [self.navigationController pushViewController:viewController animated:YES];
+        __strong typeof(self) strongself = weakself;
+        UIViewController *viewController = [[CTMediator sharedInstance] B_viewControllerWithContentText:@"Hello,word !!!" andSelf:strongself block:^{
+            [weakself.navigationController dismissViewControllerAnimated:YES completion:nil];
+        }];
+        [strongself.navigationController pushViewController:viewController animated:YES];
     }];
-    [self.view addSubview:button];}
+    [self.view addSubview:button];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (NSString *)getBViewControllerTitle
+{
+    return @"xxx";
+}
+
 
 /*
 #pragma mark - Navigation
